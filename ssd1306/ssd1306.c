@@ -10,13 +10,13 @@ void ssd1306_Reset(void) {
 }
 
 // Send a byte to the command register
-void ssd1306_WriteCommand(uint8_t byte) {
+static void ssd1306_WriteCommand(uint8_t byte) {
     HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte, I2C_MEMADD_SIZE_8BIT,
                       HAL_MAX_DELAY);
 }
 
 // Send data
-void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
+static void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
     for (uint16_t i = 0; i < buff_size; i++) {
         HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, I2C_MEMADD_SIZE_8BIT,
                           buffer + i, 1, HAL_MAX_DELAY);
@@ -448,6 +448,7 @@ void ssd1306_SetContrast(const uint8_t value) {
 }
 
 void ssd1306_SetDisplayOn(const uint8_t on) {
+    if (SSD1306.DisplayOn == !!on) return;
     uint8_t value;
     if (on) {
         value             = 0xAF; // Display on
