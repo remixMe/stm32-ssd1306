@@ -41,7 +41,7 @@
 #endif
 
 #include "ssd1306_fonts.h"
-
+#include "ssd1306_fonts_zh.h"
 #if defined(SSD1306_USE_I2C)
 /* vvv I2C config vvv */
 
@@ -111,7 +111,7 @@ extern SPI_HandleTypeDef SSD1306_SPI_PORT;
 typedef enum {
     Black = 0x00, // Black color, no pixel
     White = 0x01  // Pixel is set. Color depends on OLED
-} SSD1306_COLOR;
+} SSD1306_Color_t;
 
 typedef enum {
     SSD1306_OK  = 0x00,
@@ -129,36 +129,36 @@ typedef struct {
 typedef struct {
     uint8_t x;
     uint8_t y;
-} SSD1306_VERTEX;
+} SSD1306_VERTEX_t;
 
 // Procedure definitions
-void    ssd1306_Init(void);
-void    ssd1306_Fill(SSD1306_COLOR color);
-void    ssd1306_UpdateScreen(void);
-void    ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
-char    ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color);
-char    ssd1306_WriteString(char *str, FontDef Font, SSD1306_COLOR color);
-void    ssd1306_SetCursor(uint8_t x, uint8_t y);
-void    ssd1306_Line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_COLOR color);
-void    ssd1306_DrawArc(uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle, uint16_t sweep,
-                        SSD1306_COLOR color);
-void    ssd1306_DrawCircle(uint8_t par_x, uint8_t par_y, uint8_t par_r, SSD1306_COLOR color);
-void    ssd1306_Polyline(const SSD1306_VERTEX *par_vertex, uint16_t par_size, SSD1306_COLOR color);
-void    ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_COLOR color);
-void    ssd1306_DrawBitmap(uint8_t x, uint8_t y, const unsigned char *bitmap, uint8_t w, uint8_t h,
-                           SSD1306_COLOR color);
+void ssd1306_Init(void);
+void ssd1306_Fill(SSD1306_Color_t color);
+void ssd1306_UpdateScreen(void);
+void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_Color_t color);
+char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_Color_t color);
+char ssd1306_WriteString(char *str, FontDef Font, SSD1306_Color_t color);
+void ssd1306_SetCursor(uint8_t x, uint8_t y);
+void ssd1306_Line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_Color_t color);
+void ssd1306_DrawArc(uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle, uint16_t sweep,
+                     SSD1306_Color_t color);
+void ssd1306_DrawCircle(uint8_t par_x, uint8_t par_y, uint8_t par_r, SSD1306_Color_t color);
+void ssd1306_Polyline(const SSD1306_VERTEX_t *par_vertex, uint16_t par_size, SSD1306_Color_t color);
+void ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_Color_t color);
+void ssd1306_DrawBitmap(uint8_t x, uint8_t y, const unsigned char *bitmap, uint8_t w, uint8_t h,
+                        SSD1306_Color_t color);
 /**
  * @brief Sets the contrast of the display.
  * @param[in] value contrast to set.
  * @note Contrast increases as the value increases.
  * @note RESET = 7Fh.
  */
-void    ssd1306_SetContrast(const uint8_t value);
+void ssd1306_SetContrast(const uint8_t value);
 /**
  * @brief Set Display ON/OFF.
  * @param[in] on 0 for OFF, any for ON.
  */
-void    ssd1306_SetDisplayOn(const uint8_t on);
+void ssd1306_SetDisplayOn(const uint8_t on);
 /**
  * @brief Reads DisplayOn state.
  * @return  0: OFF.
@@ -171,5 +171,5 @@ uint8_t ssd1306_GetDisplayOn();
 // void            ssd1306_WriteCommand(uint8_t byte);
 // void            ssd1306_WriteData(uint8_t *buffer, size_t buff_size);
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t *buf, uint32_t len);
-
+#include "ssd1306_zh.h"
 #endif // __SSD1306_H__

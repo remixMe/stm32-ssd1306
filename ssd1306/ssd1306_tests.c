@@ -237,7 +237,7 @@ void ssd1306_TestArc() {
 }
 
 void ssd1306_TestPolyline() {
-    SSD1306_VERTEX loc_vertex[] = {{35, 40}, {40, 20}, {45, 28}, {50, 10},
+    SSD1306_VERTEX_t loc_vertex[] = {{35, 40}, {40, 20}, {45, 28}, {50, 10},
                                    {45, 16}, {50, 10}, {53, 16}};
 
     ssd1306_Polyline(loc_vertex, sizeof(loc_vertex) / sizeof(loc_vertex[0]), White);

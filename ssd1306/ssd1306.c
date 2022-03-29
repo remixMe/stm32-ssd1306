@@ -60,7 +60,7 @@ void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
 static uint8_t SSD1306_Buffer[SSD1306_BUFFER_SIZE];
 
 // Screen object
-static SSD1306_t SSD1306;
+SSD1306_t SSD1306;
 
 /* Fills the Screenbuffer with values from a given buffer of a fixed length */
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t *buf, uint32_t len) {
@@ -175,7 +175,7 @@ void ssd1306_Init(void) {
 }
 
 // Fill the whole screen with the given color
-void ssd1306_Fill(SSD1306_COLOR color) {
+void ssd1306_Fill(SSD1306_Color_t color) {
     /* Set memory */
     uint32_t i;
 
@@ -204,7 +204,7 @@ void ssd1306_UpdateScreen(void) {
 //    X => X Coordinate
 //    Y => Y Coordinate
 //    color => Pixel color
-void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color) {
+void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_Color_t color) {
     if (x >= SSD1306_WIDTH || y >= SSD1306_HEIGHT) {
         // Don't write outside the buffer
         return;
@@ -222,7 +222,7 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color) {
 // ch       => char om weg te schrijven
 // Font     => Font waarmee we gaan schrijven
 // color    => Black or White
-char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
+char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_Color_t color) {
     uint32_t i, b, j;
 
     // Check if character is valid
@@ -241,10 +241,10 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
         for (j = 0; j < Font.FontWidth; j++) {
             if ((b << j) & 0x8000) {
                 ssd1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i),
-                                  (SSD1306_COLOR)color);
+                                  (SSD1306_Color_t)color);
             } else {
                 ssd1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i),
-                                  (SSD1306_COLOR)!color);
+                                  (SSD1306_Color_t)!color);
             }
         }
     }
@@ -257,7 +257,7 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
 }
 
 // Write full string to screenbuffer
-char ssd1306_WriteString(char *str, FontDef Font, SSD1306_COLOR color) {
+char ssd1306_WriteString(char *str, FontDef Font, SSD1306_Color_t color) {
     // Write until null-byte
     while (*str) {
         if (ssd1306_WriteChar(*str, Font, color) != *str) {
@@ -280,7 +280,7 @@ void ssd1306_SetCursor(uint8_t x, uint8_t y) {
 }
 
 // Draw line by Bresenhem's algorithm
-void ssd1306_Line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_COLOR color) {
+void ssd1306_Line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_Color_t color) {
     int32_t deltaX = abs(x2 - x1);
     int32_t deltaY = abs(y2 - y1);
     int32_t signX  = ((x1 < x2) ? 1 : -1);
@@ -309,7 +309,7 @@ void ssd1306_Line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_COLOR 
     return;
 }
 // Draw polyline
-void ssd1306_Polyline(const SSD1306_VERTEX *par_vertex, uint16_t par_size, SSD1306_COLOR color) {
+void ssd1306_Polyline(const SSD1306_VERTEX_t *par_vertex, uint16_t par_size, SSD1306_Color_t color) {
     uint16_t i;
     if (par_vertex != 0) {
         for (i = 1; i < par_size; i++) {
@@ -341,7 +341,7 @@ static uint16_t ssd1306_NormalizeTo0_360(uint16_t par_deg) {
  * sweep in degree
  */
 void ssd1306_DrawArc(uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle, uint16_t sweep,
-                     SSD1306_COLOR color) {
+                     SSD1306_Color_t color) {
 #define CIRCLE_APPROXIMATION_SEGMENTS 36
     float    approx_degree;
     uint32_t approx_segments;
@@ -374,7 +374,7 @@ void ssd1306_DrawArc(uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle,
     return;
 }
 // Draw circle by Bresenhem's algorithm
-void ssd1306_DrawCircle(uint8_t par_x, uint8_t par_y, uint8_t par_r, SSD1306_COLOR par_color) {
+void ssd1306_DrawCircle(uint8_t par_x, uint8_t par_y, uint8_t par_r, SSD1306_Color_t par_color) {
     int32_t x   = -par_r;
     int32_t y   = 0;
     int32_t err = 2 - 2 * par_r;
@@ -411,7 +411,7 @@ void ssd1306_DrawCircle(uint8_t par_x, uint8_t par_y, uint8_t par_r, SSD1306_COL
 }
 
 // Draw rectangle
-void ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_COLOR color) {
+void ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_Color_t color) {
     ssd1306_Line(x1, y1, x2, y1, color);
     ssd1306_Line(x2, y1, x2, y2, color);
     ssd1306_Line(x2, y2, x1, y2, color);
@@ -423,7 +423,7 @@ void ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD13
 // Draw bitmap - ported from the ADAFruit GFX library
 
 void ssd1306_DrawBitmap(uint8_t x, uint8_t y, const unsigned char *bitmap, uint8_t w, uint8_t h,
-                        SSD1306_COLOR color) {
+                        SSD1306_Color_t color) {
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte      = 0;
 
