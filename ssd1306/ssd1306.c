@@ -5,7 +5,7 @@
 
 #if defined(SSD1306_USE_I2C)
 
-void ssd1306_Reset(void) {
+static void ssd1306_Reset(void) {
     /* for I2C - do nothing */
 }
 
