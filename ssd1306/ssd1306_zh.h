@@ -6,13 +6,7 @@
 #include "ssd1306_fonts.h"
 #include "ssd1306_fonts_zh.h"
 
-typedef struct {
-    const uint8_t  FontWidth;  /*!< Font width in pixels */
-    const uint8_t  FontHeight; /*!< Font height in pixels */
-    const uint8_t *data;       /*!< Pointer to data font data array */
-} ZH_FontDef;
-
-void ssd1306_WriteChar_ZH(char ch, ZH_FontDef Font, SSD1306_Color_t color);
-void ssd1306_WriteString_ZH(char *str, ZH_FontDef Font, SSD1306_Color_t color);
-
+void ssd1306_WriteChar_ZH(uint32_t index, const ZH_FontDef *Font, SSD1306_Color_t color);
+void ssd1306_WriteString_ZH(uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
+                            SSD1306_Color_t color);
 #endif //__SSD1306_ZH_H__
