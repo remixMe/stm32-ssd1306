@@ -147,6 +147,9 @@ void ssd1306_Polyline(const SSD1306_VERTEX_t *par_vertex, uint16_t par_size, SSD
 void ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_Color_t color);
 void ssd1306_DrawBitmap(uint8_t x, uint8_t y, const unsigned char *bitmap, uint8_t w, uint8_t h,
                         SSD1306_Color_t color);
+void ssd1306_WriteChar_ZH(uint32_t index, const ZH_FontDef *Font, SSD1306_Color_t color);
+void ssd1306_WriteString_ZH(uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
+                            SSD1306_Color_t color);
 /**
  * @brief Sets the contrast of the display.
  * @param[in] value contrast to set.
@@ -171,5 +174,5 @@ uint8_t ssd1306_GetDisplayOn();
 // void            ssd1306_WriteCommand(uint8_t byte);
 // void            ssd1306_WriteData(uint8_t *buffer, size_t buff_size);
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t *buf, uint32_t len);
-#include "ssd1306_zh.h"
+
 #endif // __SSD1306_H__

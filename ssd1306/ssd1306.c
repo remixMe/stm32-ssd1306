@@ -60,7 +60,7 @@ void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
 static uint8_t SSD1306_Buffer[SSD1306_BUFFER_SIZE];
 
 // Screen object
-SSD1306_t SSD1306;
+static SSD1306_t SSD1306;
 
 /* Fills the Screenbuffer with values from a given buffer of a fixed length */
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t *buf, uint32_t len) {
@@ -168,8 +168,8 @@ void ssd1306_Init(void) {
     ssd1306_UpdateScreen();
 
     // Set default values for screen object
-    SSD1306.CurrentX    = 0;
-    SSD1306.CurrentY    = 0;
+    SSD1306.CurrentX = 0;
+    SSD1306.CurrentY = 0;
 
     SSD1306.Initialized = 1;
 }
@@ -309,7 +309,8 @@ void ssd1306_Line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD1306_Color_
     return;
 }
 // Draw polyline
-void ssd1306_Polyline(const SSD1306_VERTEX_t *par_vertex, uint16_t par_size, SSD1306_Color_t color) {
+void ssd1306_Polyline(const SSD1306_VERTEX_t *par_vertex, uint16_t par_size,
+                      SSD1306_Color_t color) {
     uint16_t i;
     if (par_vertex != 0) {
         for (i = 1; i < par_size; i++) {
@@ -351,7 +352,7 @@ void ssd1306_DrawArc(uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle,
     uint32_t loc_sweep = 0;
     float    rad;
 
-    loc_sweep       = ssd1306_NormalizeTo0_360(sweep);
+    loc_sweep = ssd1306_NormalizeTo0_360(sweep);
 
     count           = (ssd1306_NormalizeTo0_360(start_angle) * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
     approx_segments = (loc_sweep * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
@@ -462,4 +463,35 @@ void ssd1306_SetDisplayOn(const uint8_t on) {
 
 uint8_t ssd1306_GetDisplayOn() {
     return SSD1306.DisplayOn;
+}
+
+void ssd1306_WriteChar_ZH(uint32_t index, const ZH_FontDef *Font, SSD1306_Color_t color) {
+    if (index >= Font->NumberOfChar) return;
+    // Check remaining space on current line
+    if (SSD1306_WIDTH < (SSD1306.CurrentX + Font->FontWidth)
+        || SSD1306_HEIGHT < (SSD1306.CurrentY + Font->FontHeight)) {
+        // Not enough space on current line
+        return;
+    }
+    uint32_t BytePerRow = Font->FontWidth / 8 + ((Font->FontWidth % 8) ? 1 : 0);
+    for (uint32_t CurrentRow = 0; CurrentRow < Font->FontHeight; CurrentRow++) {
+        const uint8_t *RowData =
+            Font->data + (index * Font->FontHeight * BytePerRow + CurrentRow * BytePerRow);
+        for (uint32_t CurrentBit = 0; CurrentBit < Font->FontWidth; CurrentBit++) {
+            if (((*(RowData + CurrentBit / 8)) >> (CurrentBit % 8)) & 0x01) {
+                ssd1306_DrawPixel(SSD1306.CurrentX + CurrentBit, SSD1306.CurrentY + CurrentRow,
+                                  (SSD1306_Color_t)color);
+            } else {
+                ssd1306_DrawPixel(SSD1306.CurrentX + CurrentBit, SSD1306.CurrentY + CurrentRow,
+                                  (SSD1306_Color_t)!color);
+            }
+        }
+    }
+
+    // The current space is now taken
+    SSD1306.CurrentX += Font->FontWidth;
+}
+void ssd1306_WriteString_ZH(uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
+                            SSD1306_Color_t color) {
+    for (uint8_t i = 0; i < charNum; i++) { ssd1306_WriteChar_ZH(index[i], Font, color); }
 }
