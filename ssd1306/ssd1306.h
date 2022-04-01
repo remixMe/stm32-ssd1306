@@ -148,7 +148,7 @@ void ssd1306_DrawRectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, SSD13
 void ssd1306_DrawBitmap(uint8_t x, uint8_t y, const unsigned char *bitmap, uint8_t w, uint8_t h,
                         SSD1306_Color_t color);
 void ssd1306_WriteChar_ZH(uint32_t index, const ZH_FontDef *Font, SSD1306_Color_t color);
-void ssd1306_WriteString_ZH(uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
+void ssd1306_WriteString_ZH(const uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
                             SSD1306_Color_t color);
 /**
  * @brief Sets the contrast of the display.

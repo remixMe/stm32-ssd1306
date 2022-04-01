@@ -491,7 +491,7 @@ void ssd1306_WriteChar_ZH(uint32_t index, const ZH_FontDef *Font, SSD1306_Color_
     // The current space is now taken
     SSD1306.CurrentX += Font->FontWidth;
 }
-void ssd1306_WriteString_ZH(uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
+void ssd1306_WriteString_ZH(const uint32_t *index, uint8_t charNum, const ZH_FontDef *Font,
                             SSD1306_Color_t color) {
     for (uint8_t i = 0; i < charNum; i++) { ssd1306_WriteChar_ZH(index[i], Font, color); }
 }
